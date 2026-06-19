@@ -109,7 +109,7 @@ Uplive is a modular monolith: one Python codebase with clear module boundaries (
 
 The product flow is deliberately two-phase. First, `POST /api/sources` stores a URL and enqueues `download_source`; the client polls until status is `ready` and uses the preview endpoint for playback. Second, `POST /api/jobs` validates clip ranges against the stored duration, persists the job, and enqueues `render_job`. That split lets the editor work against a stable local file instead of re-fetching YouTube on every export attempt.
 
-The main tradeoff is simplicity over horizontal scale. A single arq worker with `max_jobs = 1` serializes CPU-bound ffmpeg work so one render cannot starve another on a small host. Postgres is the source of truth for status and metadata; Redis is for queue depth and fast progress reads during polling. We cap inputs early (720p download format, 720p export height, max source duration, max clip count) so bad jobs fail at the API instead of halfway through a render.
+The main tradeoff is simplicity over horizontal scale. A single arq worker with `max_jobs = 1` serializes CPU-bound ffmpeg work so one render cannot starve another on a small host. Postgres is the source of truth for status and metadata; Redis is for queue depth and fast progress reads during polling. I cap inputs early (720p download format, 720p export height, max source duration, max clip count) so bad jobs fail at the API instead of halfway through a render.
 
 Long work is always asynchronous. Creating a source or job returns immediately; the React client polls `GET /api/sources/{id}` and `GET /api/jobs/{id}` every 1.5 seconds until ready, done, or error. Progress during renders is written to Redis for low-latency reads and mirrored into Postgres for durability. No WebSockets, no server-sent events.
 
@@ -131,19 +131,19 @@ If downloads pile up, they are not gated the same way. Source creates always enq
 
 Disk on the shared volume is the silent limit. Large sources plus temporary clip files for multiple concurrent downloads can exhaust space before CPU does. Cleanup on success and failure helps, but there is no global disk quota yet.
 
-We designed around these limits by keeping the worker serial, surfacing queue fullness as 503, storing progress in Redis with a TTL so stale keys expire, and bounding clip count and source length in request validation.
+I designed around these limits by keeping the worker serial, surfacing queue fullness as 503, storing progress in Redis with a TTL so stale keys expire, and bounding clip count and source length in request validation.
 
 ### Engineering judgment
 
-We did not build separate download and render workers, multi-tenant auth, a distributed object store, or real-time push updates. One worker type and one queue kept local development and Docker Compose wiring straightforward; polling is good enough for a demo-scale editor.
+I did not build separate download and render workers, multi-tenant auth, a distributed object store, or real-time push updates. One worker type and one queue kept local development and Docker Compose wiring straightforward; polling is good enough for a demo-scale editor.
 
-We did not build a full timeline editor, user accounts, or a distributed object store. Clip editing uses numeric in/out fields and native video preview, which covers the demo without canvas-level UI investment. `StorageService` is the seam where S3-style storage would plug in later.
+I did not build a full timeline editor, user accounts, or a distributed object store. Clip editing uses numeric in/out fields and native video preview, which covers the demo without canvas-level UI investment. `StorageService` is the seam where S3-style storage would plug in later.
 
-We did not add a download queue cap or priority lanes. Sources and renders share the same arq pool, which is simpler but means a download spike can push out renders until the queue drains.
+I did not add a download queue cap or priority lanes. Sources and renders share the same arq pool, which is simpler but means a download spike can push out renders until the queue drains.
 
-We did not implement adaptive quality, GPU encoding, or resume-from-checkpoint renders. Every job re-runs extract, merge, and export from scratch. That trades faster iteration on correctness for wasted CPU on retries.
+I did not implement adaptive quality, GPU encoding, or resume-from-checkpoint renders. Every job re-runs extract, merge, and export from scratch. That trades faster iteration on correctness for wasted CPU on retries.
 
-We did not build admin dashboards, metrics export, or automated retention sweeps beyond per-job cleanup. Operational visibility is logs plus DB/Redis inspection.
+I did not build admin dashboards, metrics export, or automated retention sweeps beyond per-job cleanup. Operational visibility is logs plus DB/Redis inspection.
 
 ### 1,000 users at once
 
