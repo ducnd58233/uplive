@@ -2,6 +2,17 @@
 
 Run from the repository root unless a section says otherwise.
 
+## Makefile
+
+```bash
+make help
+make create
+make up-infra
+make migrate
+make run-api
+make migration MSG=describe_change
+```
+
 ## Docker
 
 ```bash

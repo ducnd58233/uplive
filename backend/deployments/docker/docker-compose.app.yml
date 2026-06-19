@@ -8,6 +8,7 @@ services:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     environment:
       REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql+asyncpg://uplive:uplive@postgres:5432/uplive
       WORK_DIR: /media
     volumes:
       - uplive_media:/media
@@ -15,6 +16,8 @@ services:
       - "8000:8000"
     depends_on:
       redis:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     deploy:
       resources:
@@ -43,11 +46,14 @@ services:
     command: ["arq", "app.worker.WorkerSettings"]
     environment:
       REDIS_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql+asyncpg://uplive:uplive@postgres:5432/uplive
       WORK_DIR: /media
     volumes:
       - uplive_media:/media
     depends_on:
       redis:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
     deploy:
       resources:

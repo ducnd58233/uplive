@@ -10,6 +10,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    database_url: str = "postgresql+asyncpg://uplive:uplive@localhost:5432/uplive"
     redis_url: str = "redis://localhost:6379/0"
     max_source_seconds: int = 1200
     max_clips: int = 8
@@ -21,6 +22,7 @@ class Settings(BaseSettings):
     log_file: str = "uplive.log"
     log_max_bytes: int = 5 * 1024 * 1024
     log_backup_count: int = 5
+    arq_queue_key: str = "arq:queue"
 
 
 @lru_cache
