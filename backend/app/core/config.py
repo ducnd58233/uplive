@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     log_max_bytes: int = 5 * 1024 * 1024
     log_backup_count: int = 5
     arq_queue_key: str = "arq:queue"
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ]
+    cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
 
 @lru_cache

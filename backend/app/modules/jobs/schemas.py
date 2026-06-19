@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.modules.jobs.domain import TransitionType
+from app.modules.jobs.domain import JobStatus, TransitionType
 
 
 class ClipRange(BaseModel):
@@ -47,3 +47,14 @@ def check_clips_fit(
     for clip in clips:
         if clip.end > duration:
             raise ValueError("clip end exceeds source duration")
+
+
+class JobCreatedResponse(BaseModel):
+    job_id: str
+    status: JobStatus
+
+
+class JobDetailResponse(BaseModel):
+    status: JobStatus
+    progress: int
+    error: str | None = None
