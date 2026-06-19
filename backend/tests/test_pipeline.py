@@ -117,7 +117,9 @@ async def test_run_job_render_reaches_done_with_result(pipeline_deps) -> None:
     source_path = storage.source_path(str(source_id))
     make_test_clip(source_path, duration=4.0)
 
-    source = await job_store.create_source("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    source = await job_store.create_source(
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    )
     await job_store.mark_source_ready(
         source.id,
         duration=4.0,
@@ -159,7 +161,9 @@ async def test_run_job_render_cleans_up_on_failure(pipeline_deps) -> None:
     source_path = storage.source_path(str(source_id))
     make_test_clip(source_path, duration=3.0)
 
-    source = await job_store.create_source("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    source = await job_store.create_source(
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    )
     await job_store.mark_source_ready(
         source.id,
         duration=3.0,
