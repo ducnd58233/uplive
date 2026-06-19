@@ -7,7 +7,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:80"
+    depends_on:
+      api:
+        condition: service_healthy
     networks:
       - uplive_net
-    profiles:
-      - full

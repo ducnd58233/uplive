@@ -11,6 +11,7 @@ from app.modules.jobs.models.source_row import SourceRow
 
 
 def _prepend_ffmpeg_path() -> None:
+    """Test-only helper for local pytest when ffmpeg is not on PATH (e.g. Windows conda)."""
     if shutil.which("ffmpeg"):
         return
     candidates: list[Path] = []

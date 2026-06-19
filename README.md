@@ -16,10 +16,21 @@ make test
 make lint
 ```
 
-## Docker
+## Docker (recommended — zero local setup)
+
+From the repository root, one command starts Postgres, Redis, API, worker, and frontend:
 
 ```bash
 docker compose -f deployments/docker/docker-compose.yml up --build
+```
+
+Open **http://localhost:5173** for the UI. The API is at **http://localhost:8000** (`/health`).
+
+Migrations run automatically when the API container starts. ffmpeg and ffprobe come from the backend image (no host install required).
+
+Tear down:
+
+```bash
 docker compose -f deployments/docker/docker-compose.yml down -v
 ```
 
@@ -37,10 +48,10 @@ docker compose -f backend/deployments/docker/docker-compose.infra.yml up -d
 docker compose -f backend/deployments/docker/docker-compose.infra.yml down -v
 ```
 
-Frontend only (requires backend network; use `full` profile):
+Frontend only (requires backend network already running):
 
 ```bash
-docker compose -f frontend/deployments/docker/docker-compose.yml --profile full up --build
+docker compose -f frontend/deployments/docker/docker-compose.yml up --build
 docker compose -f frontend/deployments/docker/docker-compose.yml down -v
 ```
 
