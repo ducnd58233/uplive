@@ -1,0 +1,11 @@
+# Host port bindings for local development (API/worker on the host connecting to Docker infra).
+name: uplive-backend
+
+services:
+  redis:
+    ports:
+      - "6379:6379"
+
+  postgres:
+    ports:
+      - "5432:5432"

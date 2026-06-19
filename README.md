@@ -41,11 +41,11 @@ docker compose -f backend/deployments/docker/docker-compose.yml up --build
 docker compose -f backend/deployments/docker/docker-compose.yml down -v
 ```
 
-Redis and Postgres only:
+Redis and Postgres only (host ports for local API/worker):
 
 ```bash
-docker compose -f backend/deployments/docker/docker-compose.infra.yml up -d
-docker compose -f backend/deployments/docker/docker-compose.infra.yml down -v
+docker compose -f backend/deployments/docker/docker-compose.infra.yml -f backend/deployments/docker/docker-compose.infra.host.yml up -d
+docker compose -f backend/deployments/docker/docker-compose.infra.yml -f backend/deployments/docker/docker-compose.infra.host.yml down -v
 ```
 
 Frontend only (requires backend network already running):

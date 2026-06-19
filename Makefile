@@ -2,6 +2,7 @@ BACKEND_DIR := backend
 ROOT_COMPOSE := deployments/docker/docker-compose.yml
 BACKEND_COMPOSE := backend/deployments/docker/docker-compose.yml
 INFRA_COMPOSE := backend/deployments/docker/docker-compose.infra.yml
+INFRA_HOST_COMPOSE := backend/deployments/docker/docker-compose.infra.host.yml
 FRONTEND_COMPOSE := frontend/deployments/docker/docker-compose.yml
 
 UV ?= $(if $(filter Windows_NT,$(OS)),python -m uv,uv)
@@ -62,10 +63,10 @@ down-backend:
 	$(COMPOSE) -f $(BACKEND_COMPOSE) down -v
 
 up-infra:
-	$(COMPOSE) -f $(INFRA_COMPOSE) up -d
+	$(COMPOSE) -f $(INFRA_COMPOSE) -f $(INFRA_HOST_COMPOSE) up -d
 
 down-infra:
-	$(COMPOSE) -f $(INFRA_COMPOSE) down -v
+	$(COMPOSE) -f $(INFRA_COMPOSE) -f $(INFRA_HOST_COMPOSE) down -v
 
 run-api:
 	cd $(BACKEND_DIR) && $(UV) run uvicorn app.main:app --reload --port 8000
