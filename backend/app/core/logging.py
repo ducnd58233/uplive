@@ -10,12 +10,12 @@ LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 DEFAULT_LOG_MAX_BYTES = 5 * 1024 * 1024
 DEFAULT_LOG_BACKUP_COUNT = 5
 
-_configured = False
+_logging_ready = False
 
 
-def configure_logging(settings: Settings | None = None) -> None:
-    global _configured
-    if _configured:
+def setup_logging(settings: Settings | None = None) -> None:
+    global _logging_ready
+    if _logging_ready:
         return
 
     resolved = settings or get_settings()
@@ -51,9 +51,9 @@ def configure_logging(settings: Settings | None = None) -> None:
         uvicorn_logger.handlers.clear()
         uvicorn_logger.propagate = True
 
-    _configured = True
+    _logging_ready = True
     get_logger(__name__).info(
-        "Logging configured level=%s file=%s",
+        "log level=%s path=%s",
         resolved.log_level,
         log_path,
     )
@@ -64,9 +64,9 @@ def get_logger(name: str) -> logging.Logger:
 
 
 def reset_logging() -> None:
-    global _configured
+    global _logging_ready
     root = logging.getLogger()
     for handler in root.handlers[:]:
         handler.close()
         root.removeHandler(handler)
-    _configured = False
+    _logging_ready = False

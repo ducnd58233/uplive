@@ -13,7 +13,7 @@ class CreateSourceRequest(BaseModel):
 
     @field_validator("url")
     @classmethod
-    def validate_youtube_url(cls, value: HttpUrl) -> HttpUrl:
+    def check_youtube_url(cls, value: HttpUrl) -> HttpUrl:
         if not YOUTUBE_URL_PATTERN.match(str(value)):
             raise ValueError("URL must be a valid YouTube watch or youtu.be link")
         return value

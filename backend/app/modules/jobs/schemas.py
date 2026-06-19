@@ -8,7 +8,7 @@ class ClipRange(BaseModel):
     end: float = Field(gt=0)
 
     @model_validator(mode="after")
-    def validate_range(self) -> "ClipRange":
+    def check_start_before_end(self) -> "ClipRange":
         if self.start >= self.end:
             raise ValueError("start must be less than end")
         return self
@@ -22,19 +22,19 @@ class CreateJobRequest(BaseModel):
 
     @field_validator("clips")
     @classmethod
-    def validate_clip_count(cls, value: list[ClipRange]) -> list[ClipRange]:
+    def check_clip_count(cls, value: list[ClipRange]) -> list[ClipRange]:
         if not value:
             raise ValueError("clips must not be empty")
         return value
 
     @model_validator(mode="after")
-    def validate_transition_duration(self) -> "CreateJobRequest":
+    def check_transition_duration(self) -> "CreateJobRequest":
         if self.transition != TransitionType.CUT and self.transition_duration <= 0:
             raise ValueError("transition_duration must be positive for fade and slide")
         return self
 
 
-def validate_clips_against_duration(
+def check_clips_fit(
     clips: list[ClipRange],
     duration: float,
     max_clips: int,

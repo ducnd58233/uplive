@@ -26,8 +26,8 @@ class StorageService:
     def result_path(self, job_id: str, filename: str = "result.mp4") -> Path:
         return self.job_dir(job_id) / filename
 
-    def cleanup(self, workspace_id: str) -> None:
-        path = self._root / workspace_id
+    def cleanup(self, folder_id: str) -> None:
+        path = self._root / folder_id
         if path.exists():
             shutil.rmtree(path, ignore_errors=True)
 

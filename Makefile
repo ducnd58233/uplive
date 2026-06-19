@@ -17,7 +17,7 @@ COMPOSE ?= docker compose
 help:
 	@echo "uplive — available targets"
 	@echo ""
-	@echo "  Setup"
+	@echo "  Environment"
 	@echo "    make create          Create/update conda env and install deps (uv sync)"
 	@echo "    make sync            Install backend deps only (uv sync)"
 	@echo ""

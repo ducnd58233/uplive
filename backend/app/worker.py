@@ -1,19 +1,19 @@
 from arq.connections import RedisSettings
 
 from app.core.config import get_settings
-from app.core.logging import configure_logging, get_logger
+from app.core.logging import get_logger, setup_logging
 
 logger = get_logger(__name__)
 
 
 async def startup(ctx: dict) -> None:
-    configure_logging()
-    logger.info("Worker process started")
+    setup_logging()
+    logger.info("worker started")
     _ = ctx
 
 
 async def shutdown(ctx: dict) -> None:
-    logger.info("Worker process stopped")
+    logger.info("worker stopped")
     _ = ctx
 
 

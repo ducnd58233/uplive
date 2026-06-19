@@ -17,12 +17,12 @@ class JobQueue:
         count = await self._redis.zcard(self._settings.arq_queue_key)
         return int(count)
 
-    async def ensure_capacity(self) -> None:
+    async def check_capacity(self) -> None:
         if await self.depth() >= self._settings.queue_size:
             raise QueueFullError()
 
     async def reserve_slot(self) -> None:
-        await self.ensure_capacity()
+        await self.check_capacity()
         await self._redis.zadd(
             self._settings.arq_queue_key,
             {f"reserved:{await self._redis.time()}": await self.depth()},

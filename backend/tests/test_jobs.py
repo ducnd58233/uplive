@@ -12,7 +12,7 @@ from app.modules.storage.service import StorageService
 
 
 @pytest.mark.asyncio
-async def test_source_status_transitions(session_factory) -> None:
+async def test_source_status_flow(session_factory) -> None:
     service = JobStoreService(session_factory)
     store = JobStore(service)
 
@@ -34,7 +34,7 @@ async def test_source_status_transitions(session_factory) -> None:
 
 
 @pytest.mark.asyncio
-async def test_job_status_transitions(session_factory) -> None:
+async def test_job_status_flow(session_factory) -> None:
     service = JobStoreService(session_factory)
     store = JobStore(service)
 
@@ -63,7 +63,7 @@ async def test_job_status_transitions(session_factory) -> None:
 
 
 @pytest.mark.asyncio
-async def test_queue_backpressure(fake_redis) -> None:
+async def test_queue_full_raises(fake_redis) -> None:
     settings = Settings(queue_size=2, arq_queue_key="arq:queue")
     queue = JobQueue(fake_redis, settings=settings)
 
@@ -72,19 +72,19 @@ async def test_queue_backpressure(fake_redis) -> None:
     assert await queue.depth() == 2
 
     with pytest.raises(QueueFullError):
-        await queue.ensure_capacity()
+        await queue.check_capacity()
 
 
 @pytest.mark.asyncio
-async def test_queue_accepts_when_below_limit(fake_redis) -> None:
+async def test_queue_below_limit_ok(fake_redis) -> None:
     settings = Settings(queue_size=2, arq_queue_key="arq:queue")
     queue = JobQueue(fake_redis, settings=settings)
 
     await fake_redis.zadd("arq:queue", {"job-1": 1})
-    await queue.ensure_capacity()
+    await queue.check_capacity()
 
 
-def test_storage_workspace_lifecycle(tmp_path) -> None:
+def test_storage_job_dir_cleanup(tmp_path) -> None:
     settings = Settings(work_dir=str(tmp_path / "work"))
     storage = StorageService(settings=settings)
 

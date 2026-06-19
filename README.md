@@ -41,7 +41,7 @@ docker compose -f frontend/deployments/docker/docker-compose.yml --profile full 
 docker compose -f frontend/deployments/docker/docker-compose.yml down -v
 ```
 
-Validate compose files:
+Check compose files:
 
 ```bash
 docker compose -f deployments/docker/docker-compose.yml config
