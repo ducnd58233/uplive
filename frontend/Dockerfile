@@ -1,4 +1,11 @@
+FROM node:22-alpine AS build
+WORKDIR /app
+COPY package.json package-lock.json* ./
+RUN npm install
+COPY index.html vite.config.ts tsconfig.json tsconfig.node.json tailwind.config.js postcss.config.js eslint.config.js vitest.config.ts ./
+COPY src ./src
+RUN npm run build
+
 FROM nginx:1.27-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-RUN mkdir -p /usr/share/nginx/html
-COPY public/index.html /usr/share/nginx/html/index.html
+COPY --from=build /app/dist /usr/share/nginx/html
