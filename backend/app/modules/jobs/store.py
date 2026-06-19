@@ -37,5 +37,32 @@ class JobStore:
     async def mark_job_done(self, job_id: uuid.UUID, result_path: str) -> JobRecord:
         return await self._service.mark_job_done(job_id, result_path)
 
+    async def mark_job_error(self, job_id: uuid.UUID, error: str) -> JobRecord:
+        return await self._service.mark_job_error(job_id, error)
+
+    async def update_job_progress(self, job_id: uuid.UUID, progress: int) -> JobRecord:
+        return await self._service.update_job_progress(job_id, progress)
+
+    async def mark_source_ready(
+        self,
+        source_id: uuid.UUID,
+        duration: float,
+        title: str,
+        path: str,
+    ) -> SourceRecord:
+        return await self._service.mark_source_ready(
+            source_id,
+            duration,
+            title,
+            path,
+        )
+
+    async def mark_source_error(
+        self,
+        source_id: uuid.UUID,
+        error: str,
+    ) -> SourceRecord:
+        return await self._service.mark_source_error(source_id, error)
+
     async def count_queued_jobs(self) -> int:
         return await self._service.count_queued_jobs()

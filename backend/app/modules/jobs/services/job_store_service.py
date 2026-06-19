@@ -119,6 +119,17 @@ class JobStoreService:
     async def mark_job_error(self, job_id: uuid.UUID, error: str) -> JobRecord:
         return await self._transition_job(job_id, JobStatus.ERROR, error=error)
 
+    async def update_job_progress(self, job_id: uuid.UUID, progress: int) -> JobRecord:
+        async with self._session_factory() as session, session.begin():
+            record = await self._job_repository.update_progress(
+                session,
+                job_id,
+                progress,
+            )
+            if record is None:
+                raise JobNotFoundError(str(job_id))
+            return record
+
     async def count_queued_jobs(self) -> int:
         async with self._session_factory() as session, session.begin():
             return await self._job_repository.count_by_status(

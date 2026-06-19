@@ -53,6 +53,19 @@ class JobRepository:
             return None
         return _to_record(row)
 
+    async def update_progress(
+        self,
+        session: AsyncSession,
+        job_id: uuid.UUID,
+        progress: int,
+    ) -> JobRecord | None:
+        row = await session.get(JobRow, job_id)
+        if row is None:
+            return None
+        row.progress = progress
+        await session.flush()
+        return _to_record(row)
+
     async def update_status(
         self,
         session: AsyncSession,
