@@ -1,0 +1,27 @@
+name: uplive-backend
+
+services:
+  redis:
+    image: redis:7-alpine
+    command: >
+      redis-server
+      --maxmemory 48mb
+      --maxmemory-policy allkeys-lru
+      --save ""
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+          cpus: "0.05"
+    networks:
+      - uplive_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+networks:
+  uplive_net:
+    name: uplive_net
+    driver: bridge

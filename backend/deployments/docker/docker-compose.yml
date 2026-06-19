@@ -1,0 +1,5 @@
+name: uplive-backend
+
+include:
+  - path: docker-compose.infra.yml
+  - path: docker-compose.app.yml

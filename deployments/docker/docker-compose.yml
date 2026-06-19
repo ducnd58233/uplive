@@ -1,0 +1,5 @@
+name: uplive
+
+include:
+  - path: ../../backend/deployments/docker/docker-compose.yml
+  - path: ../../frontend/deployments/docker/docker-compose.yml

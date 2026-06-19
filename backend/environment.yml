@@ -1,0 +1,8 @@
+name: uplive
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - ffmpeg
+  - uv
+  - pip

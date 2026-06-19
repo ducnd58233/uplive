@@ -1,0 +1,62 @@
+name: uplive-backend
+
+services:
+  api:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WORK_DIR: /media
+    volumes:
+      - uplive_media:/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.05"
+    networks:
+      - uplive_net
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    command: ["arq", "app.worker.WorkerSettings"]
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WORK_DIR: /media
+    volumes:
+      - uplive_media:/media
+    depends_on:
+      redis:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+          cpus: "0.4"
+    networks:
+      - uplive_net
+
+volumes:
+  uplive_media:
+    name: uplive_media

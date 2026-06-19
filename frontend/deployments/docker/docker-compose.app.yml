@@ -1,0 +1,13 @@
+name: uplive-frontend
+
+services:
+  frontend:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    networks:
+      - uplive_net
+    profiles:
+      - full

@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.uv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# Conda
+.conda/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Media workspace (per-job temp files)
+backend/work/
+backend/logs/
+logs/
+work/
+*.mp4
+*.webm
+*.mkv
+
+# Environment
+.env
+.env.local
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Docker volumes (local bind mounts)
+media/
