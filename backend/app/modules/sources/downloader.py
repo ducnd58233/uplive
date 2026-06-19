@@ -31,6 +31,7 @@ class SourceDownloader:
         self._settings = settings or get_settings()
 
     def download(self, url: str, output_path: Path) -> DownloadResult:
+        output_path = output_path.resolve()
         output_path.parent.mkdir(parents=True, exist_ok=True)
         stem = output_path.with_suffix("")
         ydl_opts = {
@@ -52,7 +53,7 @@ class SourceDownloader:
             raise DownloadError("yt-dlp returned no metadata")
 
         downloaded_path = self._resolve_downloaded_path(stem, info)
-        if downloaded_path != output_path:
+        if downloaded_path.resolve() != output_path:
             if output_path.exists():
                 output_path.unlink()
             downloaded_path.replace(output_path)
