@@ -1,5 +1,4 @@
 import uuid
-from unittest.mock import AsyncMock
 
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -7,8 +6,7 @@ from httpx import ASGITransport, AsyncClient
 from app.core.config import Settings
 from app.core.deps import get_dispatcher, get_job_queue, get_job_store
 from app.main import app
-from app.modules.jobs.domain import JobStatus, SourceStatus, TransitionType
-from app.modules.jobs.errors import QueueFullError
+from app.modules.jobs.domain import JobStatus, SourceStatus
 from app.modules.jobs.queue import JobQueue
 from app.modules.jobs.services.job_store_service import JobStoreService
 from app.modules.jobs.store import JobStore
